@@ -4,20 +4,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
-const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config();
-
-// Import middleware
-const { errorHandler, notFound } = require('./middleware/errorMiddleware');
-const logger = require('./utils/logger');
-
-// Import routes
-const authRoutes = require('./routes/auth');
-const assessmentRoutes = require('./routes/assessment');
-const paymentRoutes = require('./routes/payment');
-const moduleRoutes = require('./routes/modules');
-const userRoutes = require('./routes/users');
 
 // Initialize Express app
 const app = express();
@@ -60,11 +48,7 @@ app.use(compression());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 } else {
-  app.use(morgan('combined', {
-    stream: {
-      write: (message) => logger.info(message.trim())
-    }
-  }));
+  app.use(morgan('combined'));
 }
 
 // Rate limiting
@@ -80,9 +64,6 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
-// Stripe webhook endpoint (before JSON parsing)
-app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
-
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
@@ -92,22 +73,6 @@ app.get('/api/health', (req, res) => {
     version: '1.0.0'
   });
 });
-
-// API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/assessment', assessmentRoutes);
-app.use('/api/payment', paymentRoutes);
-app.use('/api/modules', moduleRoutes);
-app.use('/api/users', userRoutes);
-
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../../client/build')));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/build/index.html'));
-  });
-}
 
 // Mock API Endpoints for Development
 
@@ -235,6 +200,15 @@ app.get('/api/user/dashboard', (req, res) => {
   });
 });
 
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../../client/build')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../client/build/index.html'));
+  });
+}
+
 // 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({
@@ -252,60 +226,25 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Database connection
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    
-    logger.info(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    logger.error(`Database connection error: ${error.message}`);
-    process.exit(1);
-  }
-};
+// Start server
+const PORT = process.env.PORT || 5001;
+
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+});
 
 // Graceful shutdown
 const gracefulShutdown = (signal) => {
-  logger.info(`Received ${signal}. Starting graceful shutdown...`);
+  console.log(`Received ${signal}. Starting graceful shutdown...`);
   
   server.close(() => {
-    logger.info('HTTP server closed.');
-    
-    mongoose.connection.close(() => {
-      logger.info('MongoDB connection closed.');
-      process.exit(0);
-    });
+    console.log('HTTP server closed.');
+    process.exit(0);
   });
 };
 
-// Start server
-const PORT = process.env.PORT || 5000;
-
-const startServer = async () => {
-  try {
-    await connectDB();
-    
-    const server = app.listen(PORT, () => {
-      logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-    });
-
-    // Handle graceful shutdown
-    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
-    return server;
-  } catch (error) {
-    logger.error(`Failed to start server: ${error.message}`);
-    process.exit(1);
-  }
-};
-
-// Start the server if this file is run directly
-if (require.main === module) {
-  startServer();
-}
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 module.exports = app; 

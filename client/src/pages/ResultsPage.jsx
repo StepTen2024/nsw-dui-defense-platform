@@ -19,8 +19,8 @@ import LoadingSpinner from '../components/Common/LoadingSpinner';
 const ResultsPage = () => {
   const { assessmentId } = useParams();
   const { getAssessment } = useAssessment();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading] = useState(true);
+  const [error] = useState(null);
 
   // In a real app, this would fetch the assessment data
   const assessment = getAssessment(assessmentId);
