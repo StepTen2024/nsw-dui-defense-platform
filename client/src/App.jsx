@@ -15,11 +15,20 @@ import ResultsPage from './pages/ResultsPage';
 import ModulesPage from './pages/ModulesPage';
 import PaymentPage from './pages/PaymentPage';
 import DashboardPage from './pages/DashboardPage';
+import AuthPage from './pages/AuthPage';
+import SettingsPage from './pages/SettingsPage';
+import BlogPage from './pages/BlogPage';
 
 // SEO Content Pages
 import DUIChargesAustralia from './pages/DUIChargesAustralia';
 import DUIChargesNSW from './pages/DUIChargesNSW';
 import DUIChargesVictoria from './pages/DUIChargesVictoria';
+import DUIChargesQueensland from './pages/DUIChargesQueensland';
+import DUIChargesWA from './pages/DUIChargesWA';
+import DUIChargesSA from './pages/DUIChargesSA';
+import DUIChargesTasmania from './pages/DUIChargesTasmania';
+import DUIChargesACT from './pages/DUIChargesACT';
+import DUIChargesNT from './pages/DUIChargesNT';
 
 // Blog Posts
 import FirstTimeDUIOffenceAustralia from './pages/blog/FirstTimeDUIOffenceAustralia';
@@ -85,6 +94,70 @@ function App() {
                         } 
                       />
                       
+                      <Route 
+                        path="/dui-charges-queensland" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesQueensland />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/dui-charges-western-australia" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesWA />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/dui-charges-south-australia" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesSA />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/dui-charges-tasmania" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesTasmania />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/dui-charges-act" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesACT />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/dui-charges-northern-territory" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesNT />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      {/* Blog and Supporting Content */}
+                      <Route 
+                        path="/blog" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <BlogPage />
+                          </React.Suspense>
+                        } 
+                      />
+                      
                       {/* Blog Posts */}
                       <Route 
                         path="/first-time-dui-offence-australia" 
@@ -142,6 +215,25 @@ function App() {
                         element={
                           <React.Suspense fallback={<LoadingSpinner />}>
                             <DashboardPage />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      {/* Auth and Settings Pages */}
+                      <Route 
+                        path="/auth" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <AuthPage />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/settings" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <SettingsPage />
                           </React.Suspense>
                         } 
                       />
