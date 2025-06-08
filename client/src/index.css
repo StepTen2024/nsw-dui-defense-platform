@@ -27,7 +27,7 @@
   }
   
   .btn-outline {
-    @apply btn border-secondary-300 text-secondary-700 hover:bg-secondary-50 focus:ring-secondary-500;
+    @apply btn border-secondary-300 text-secondary-700 hover:bg-secondary-50 focus:ring-secondary-500 bg-transparent;
   }
   
   .btn-success {
@@ -40,6 +40,10 @@
   
   .btn-danger {
     @apply btn bg-danger-600 text-white hover:bg-danger-700 focus:ring-danger-500;
+  }
+  
+  .btn-ghost {
+    @apply btn text-secondary-700 hover:bg-secondary-100 focus:ring-secondary-500 bg-transparent;
   }
   
   .btn-lg {
