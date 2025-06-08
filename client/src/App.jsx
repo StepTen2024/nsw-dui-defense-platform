@@ -16,6 +16,15 @@ import ModulesPage from './pages/ModulesPage';
 import PaymentPage from './pages/PaymentPage';
 import DashboardPage from './pages/DashboardPage';
 
+// SEO Content Pages
+import DUIChargesAustralia from './pages/DUIChargesAustralia';
+import DUIChargesNSW from './pages/DUIChargesNSW';
+import DUIChargesVictoria from './pages/DUIChargesVictoria';
+
+// Blog Posts
+import FirstTimeDUIOffenceAustralia from './pages/blog/FirstTimeDUIOffenceAustralia';
+import CanPoliceStopYouRandomly from './pages/blog/CanPoliceStopYouRandomly';
+
 // Components
 import Navigation from './components/Navigation';
 import LoadingSpinner from './components/Common/LoadingSpinner';
@@ -46,6 +55,56 @@ function App() {
                           </React.Suspense>
                         } 
                       />
+                      
+                      {/* Main SEO Pillar Pages */}
+                      <Route 
+                        path="/dui-charges-australia" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesAustralia />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      {/* State-Specific Pages */}
+                      <Route 
+                        path="/dui-charges-nsw" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesNSW />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/dui-charges-victoria" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <DUIChargesVictoria />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      {/* Blog Posts */}
+                      <Route 
+                        path="/first-time-dui-offence-australia" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <FirstTimeDUIOffenceAustralia />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/can-police-stop-you-randomly-australia" 
+                        element={
+                          <React.Suspense fallback={<LoadingSpinner />}>
+                            <CanPoliceStopYouRandomly />
+                          </React.Suspense>
+                        } 
+                      />
+                      
+                      {/* Application Pages */}
                       <Route 
                         path="/assessment" 
                         element={
@@ -88,53 +147,108 @@ function App() {
                       />
                     </Routes>
                   </main>
+                  
+                  {/* Footer with SEO Links */}
                   <footer className="bg-secondary-900 text-white py-12 mt-auto">
                     <div className="container-custom">
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                         <div>
                           <h3 className="font-heading font-semibold text-lg mb-4">
-                            NSW DUI Defense Navigator
+                            DUI Defence AI
                           </h3>
                           <p className="text-secondary-300 text-sm">
-                            AI-powered legal guidance for NSW DUI defendants. 
-                            Get expert analysis and defense strategies.
+                            AI-powered legal defence for DUI charges across Australia. 
+                            Expert analysis and defence strategies at affordable prices.
                           </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium mb-4">DUI Information</h4>
+                          <ul className="space-y-2 text-sm text-secondary-300">
+                            <li>
+                              <a href="/dui-charges-australia" className="hover:text-white transition-colors">
+                                DUI Charges Australia
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/dui-charges-nsw" className="hover:text-white transition-colors">
+                                DUI Charges NSW
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/dui-charges-victoria" className="hover:text-white transition-colors">
+                                DUI Charges Victoria
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/first-time-dui-offence-australia" className="hover:text-white transition-colors">
+                                First Time Offence
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/can-police-stop-you-randomly-australia" className="hover:text-white transition-colors">
+                                Police Random Stops
+                              </a>
+                            </li>
+                          </ul>
                         </div>
                         <div>
                           <h4 className="font-medium mb-4">Services</h4>
                           <ul className="space-y-2 text-sm text-secondary-300">
-                            <li>Case Assessment</li>
-                            <li>Penalty Calculator</li>
-                            <li>Defense Strategies</li>
-                            <li>Legal Modules</li>
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-medium mb-4">Legal</h4>
-                          <ul className="space-y-2 text-sm text-secondary-300">
-                            <li>Terms of Service</li>
-                            <li>Privacy Policy</li>
-                            <li>Disclaimers</li>
-                            <li>Compliance</li>
+                            <li>
+                              <a href="/assessment" className="hover:text-white transition-colors">
+                                Case Assessment
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/modules" className="hover:text-white transition-colors">
+                                Legal Modules
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/pricing" className="hover:text-white transition-colors">
+                                Pricing
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/vs-traditional-lawyers" className="hover:text-white transition-colors">
+                                vs Traditional Lawyers
+                              </a>
+                            </li>
                           </ul>
                         </div>
                         <div>
                           <h4 className="font-medium mb-4">Support</h4>
                           <ul className="space-y-2 text-sm text-secondary-300">
-                            <li>Contact Us</li>
-                            <li>FAQ</li>
-                            <li>Help Center</li>
-                            <li>Documentation</li>
+                            <li>
+                              <a href="/contact" className="hover:text-white transition-colors">
+                                Contact Us
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/faq" className="hover:text-white transition-colors">
+                                FAQ
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/help" className="hover:text-white transition-colors">
+                                Help Center
+                              </a>
+                            </li>
+                            <li>
+                              <a href="/legal" className="hover:text-white transition-colors">
+                                Legal Information
+                              </a>
+                            </li>
                           </ul>
                         </div>
                       </div>
                       <div className="border-t border-secondary-700 mt-8 pt-8 text-center text-sm text-secondary-400">
                         <p>
-                          © 2024 NSW DUI Defense Navigator. All rights reserved.
+                          © 2024 DUI Defence AI. All rights reserved.
                         </p>
                         <p className="mt-2">
                           <strong>Disclaimer:</strong> This platform provides legal information, not legal advice. 
-                          Consult with qualified NSW legal professionals for specific legal matters.
+                          Consult with qualified legal professionals for specific legal matters.
                         </p>
                       </div>
                     </div>

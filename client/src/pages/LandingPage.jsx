@@ -145,8 +145,9 @@ const LandingPage = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
+                variant="secondary"
                 size="xl" 
-                className="bg-white text-primary-700 hover:bg-primary-50"
+                className="!bg-white !text-primary-700 hover:!bg-primary-50 hover:!text-primary-800 !border-0"
                 onClick={handleStartAssessment}
               >
                 Start Free Assessment
@@ -156,7 +157,7 @@ const LandingPage = () => {
               <Button 
                 variant="outline" 
                 size="xl"
-                className="border-white/30 text-white hover:bg-white/10"
+                className="!border-white/30 !text-white hover:!bg-white/10 !bg-transparent"
                 onClick={() => navigate('/modules')}
               >
                 View Defense Modules
@@ -376,8 +377,9 @@ const LandingPage = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
+                variant="secondary"
                 size="xl" 
-                className="bg-white text-primary-700 hover:bg-primary-50"
+                className="!bg-white !text-primary-700 hover:!bg-primary-50 hover:!text-primary-800 !border-0"
                 onClick={handleStartAssessment}
               >
                 Start Your Assessment Now
