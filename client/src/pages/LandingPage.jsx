@@ -5,7 +5,6 @@ import {
   Shield, 
   Brain, 
   FileText, 
-  DollarSign, 
   Users,
   CheckCircle,
   Star,

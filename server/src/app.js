@@ -33,22 +33,21 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://js.stripe.com"],
       connectSrc: ["'self'", "https://api.stripe.com"],
-      frameSrc: ["'self'", "https://js.stripe.com"]
-    }
-  }
+    },
+  },
 }));
 
 // CORS configuration
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL 
+    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
   credentials: true,
-  optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-};
-app.use(cors(corsOptions));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -70,27 +69,27 @@ if (process.env.NODE_ENV === 'development') {
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000, // 15 minutes
-  max: process.env.RATE_LIMIT_MAX || 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
   message: {
-    error: 'Too many requests from this IP, please try again later.',
-    retryAfter: Math.ceil((process.env.RATE_LIMIT_WINDOW || 15) * 60)
+    error: 'Too many requests from this IP, please try again later.'
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
-app.use(limiter);
+
+app.use('/api/', limiter);
 
 // Stripe webhook endpoint (before JSON parsing)
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'healthy',
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    uptime: process.uptime()
+    environment: process.env.NODE_ENV || 'development',
+    version: '1.0.0'
   });
 });
 
@@ -110,9 +109,148 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// Mock API Endpoints for Development
+
+// Mock Authentication
+app.post('/api/auth/login', (req, res) => {
+  setTimeout(() => {
+    res.json({
+      success: true,
+      user: {
+        id: '1',
+        email: req.body.email,
+        firstName: 'Test',
+        lastName: 'User',
+        subscription: { plan: 'free' }
+      },
+      token: 'mock-jwt-token'
+    });
+  }, 1000);
+});
+
+app.post('/api/auth/register', (req, res) => {
+  setTimeout(() => {
+    res.json({
+      success: true,
+      user: {
+        id: '1',
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        subscription: { plan: 'free' }
+      },
+      token: 'mock-jwt-token'
+    });
+  }, 1500);
+});
+
+// Mock Assessment
+app.post('/api/assessment/submit', (req, res) => {
+  setTimeout(() => {
+    res.json({
+      success: true,
+      assessmentId: 'assessment-' + Date.now(),
+      results: {
+        riskLevel: 'Medium',
+        penaltyEstimate: {
+          fine: { min: 1100, max: 2200 },
+          licenseSuspension: { min: 3, max: 6 },
+          interlock: true,
+          communityService: { min: 0, max: 100 }
+        },
+        defenseStrategies: [
+          {
+            strategy: 'Challenge BAC Reading',
+            success: 'High',
+            description: 'Question breathalyzer calibration and maintenance.'
+          }
+        ]
+      }
+    });
+  }, 2000);
+});
+
+app.get('/api/assessment/:id', (req, res) => {
+  res.json({
+    success: true,
+    assessment: {
+      id: req.params.id,
+      status: 'completed',
+      createdAt: new Date().toISOString()
+    }
+  });
+});
+
+// Mock Payment
+app.post('/api/payment/create-intent', (req, res) => {
+  setTimeout(() => {
+    res.json({
+      success: true,
+      clientSecret: 'mock_client_secret',
+      amount: req.body.amount
+    });
+  }, 1000);
+});
+
+// Mock Modules
+app.get('/api/modules', (req, res) => {
+  res.json({
+    success: true,
+    modules: [
+      {
+        id: 'defense-strategies',
+        title: 'Advanced Defense Strategies',
+        price: 29,
+        purchased: false
+      },
+      {
+        id: 'court-procedures',
+        title: 'Court Procedures Masterclass',
+        price: 29,
+        purchased: false
+      }
+    ]
+  });
+});
+
+// Mock User Dashboard
+app.get('/api/user/dashboard', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      assessments: [
+        {
+          id: '1',
+          date: new Date().toISOString(),
+          status: 'completed',
+          riskLevel: 'Medium'
+        }
+      ],
+      progress: {
+        modulesCompleted: 2,
+        totalModules: 6,
+        completionRate: 33
+      }
+    }
+  });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    error: 'Route not found',
+    message: `Cannot ${req.method} ${req.originalUrl}`
+  });
+});
+
 // Error handling middleware
-app.use(notFound);
-app.use(errorHandler);
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: 'Something went wrong!',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+  });
+});
 
 // Database connection
 const connectDB = async () => {

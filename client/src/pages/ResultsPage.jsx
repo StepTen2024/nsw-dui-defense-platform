@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   FileText, 
@@ -18,23 +18,12 @@ import LoadingSpinner from '../components/Common/LoadingSpinner';
 
 const ResultsPage = () => {
   const { assessmentId } = useParams();
-  const { getAssessment, loading, error } = useAssessment();
-  const [assessment, setAssessment] = useState(null);
-  const [results, setResults] = useState(null);
+  const { getAssessment } = useAssessment();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchAssessment = async () => {
-      if (assessmentId) {
-        const response = await getAssessment(assessmentId);
-        if (response.success) {
-          setAssessment(response.data.assessment);
-          setResults(response.data.results);
-        }
-      }
-    };
-
-    fetchAssessment();
-  }, [assessmentId, getAssessment]);
+  // In a real app, this would fetch the assessment data
+  const assessment = getAssessment(assessmentId);
 
   // Mock data for demonstration if no assessment is found
   const mockResults = {
@@ -72,7 +61,7 @@ const ResultsPage = () => {
     ]
   };
 
-  const displayResults = results || mockResults;
+  const displayResults = assessment || mockResults;
 
   const handleDownloadReport = () => {
     // In a real app, this would download the PDF report

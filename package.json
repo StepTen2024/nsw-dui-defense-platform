@@ -1,26 +1,26 @@
 {
-  "name": "nsw-dui-defense-navigator",
+  "name": "nsw-dui-defense-platform",
   "version": "1.0.0",
   "description": "AI-powered legal guidance platform for NSW DUI defendants",
-  "main": "server/src/app.js",
+  "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "client": "cd client && npm start",
     "server": "cd server && npm run dev",
     "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build",
+    "test": "cd client && npm test && cd ../server && npm test",
     "setup": "npm install && cd client && npm install && cd ../server && npm install",
-    "migrate": "cd server && node scripts/migrate.js",
-    "test": "cd client && npm test && cd ../server && npm test"
+    "start": "cd server && npm start"
   },
-  "keywords": ["legal", "dui", "nsw", "defense", "navigator", "ai"],
-  "author": "NSW DUI Defense Navigator Team",
-  "license": "PROPRIETARY",
+  "keywords": ["legal", "dui", "nsw", "ai", "guidance", "react", "node"],
+  "author": "NSW DUI Defense Platform",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=8.0.0"
-  },
-  "devDependencies": {
-    "concurrently": "^7.6.0"
   }
 } 
